@@ -244,6 +244,12 @@ class GradleRunCommand(GradleMixin, RunCommand):
             required=False,
         )
         parser.add_argument(
+            "--dns-server",
+            dest="dns_server",
+            help="DNS server used by the emulator (defaults to 8.8.8.8)",
+            required=False,
+        )
+        parser.add_argument(
             "--Xemulator",
             action="append",
             dest="extra_emulator_args",
@@ -263,6 +269,7 @@ class GradleRunCommand(GradleMixin, RunCommand):
         test_mode: bool,
         passthrough: list[str],
         device_or_avd=None,
+        dns_server=None,
         extra_emulator_args=None,
         shutdown_on_exit=False,
         **kwargs,
@@ -274,6 +281,7 @@ class GradleRunCommand(GradleMixin, RunCommand):
         :param passthrough: The list of arguments to pass to the app
         :param device_or_avd: The device to target. If ``None``, the user will
             be asked to re-run the command selecting a specific device.
+        :param dns_server: DNS server used by the emulator.
         :param extra_emulator_args: Any additional arguments to pass to the emulator.
         :param shutdown_on_exit: Should the emulator be shut down on exit?
         """
@@ -298,7 +306,7 @@ class GradleRunCommand(GradleMixin, RunCommand):
                 extra = ""
             self.logger.info(f"Starting emulator {avd}{extra}...", prefix=app.app_name)
             device, name = self.tools.android_sdk.start_emulator(
-                avd, extra_emulator_args
+                avd, ['-dns-server', dns_server or '8.8.8.8'] + (extra_emulator_args or [])
             )
 
         try:

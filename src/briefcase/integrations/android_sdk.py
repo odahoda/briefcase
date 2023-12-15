@@ -1279,8 +1279,6 @@ In future, you can specify this device by running:
             [
                 os.fsdecode(self.emulator_path),
                 f"@{avd}",
-                "-dns-server",
-                "8.8.8.8",
             ]
             + extra_args,
             env=self.env,
